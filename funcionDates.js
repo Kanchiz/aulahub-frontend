@@ -110,6 +110,11 @@ function crearModalAdmin() {
     `;
     document.body.appendChild(div);
 
+    // Cerrar modal al dar clic afuera
+    div.addEventListener('click', (e) => {
+        if (e.target === div) cerrarModalAdmin();
+    });
+
     document.getElementById('btnAdminClose').onclick = cerrarModalAdmin;
     
     document.getElementById('btnAdminApprove').onclick = () => {

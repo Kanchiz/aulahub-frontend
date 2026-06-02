@@ -1,5 +1,5 @@
 // configuraciones.js - Conectado a Spring Boot (Mock)
-import { fetchAPI } from "./api.js";
+import { confirmarAccion, fetchAPI } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btnReset.addEventListener("click", async () => {
             if(!emailLocal) return;
 
-            if(confirm(`¿Enviar petición de restablecimiento a ${emailLocal}?`)) {
+            if(await confirmarAccion(`¿Enviar petición de restablecimiento a ${emailLocal}?`)) {
                 try {
                     const textoOriginal = btnReset.innerText;
                     btnReset.innerText = "Enviando...";
@@ -33,12 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         body: JSON.stringify({ email: emailLocal })
                     });
 
-                    alert("Petición enviada. Si el correo existe en el sistema, recibirás instrucciones pronto.");
+                    mostrarNotificacion("Petición enviada. Si el correo existe en el sistema, recibirás instrucciones pronto.", "success");
                     btnReset.innerText = "Correo Enviado";
                     
                 } catch (error) {
                     console.error("Error al restablecer:", error);
-                    alert("Error de conexión con el servidor: " + error.message);
+                    mostrarNotificacion("Error de conexión con el servidor: " + error.message, "error");
                     btnReset.innerText = "Reintentar";
                     btnReset.disabled = false;
                 }
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             } catch (error) {
                 console.error("Error subiendo foto:", error);
-                alert("Error al intentar guardar la imagen.");
+                mostrarNotificacion("Error al intentar guardar la imagen.", "error");
                 btnFoto.innerText = textoOriginal;
             } finally {
                 btnFoto.disabled = false;

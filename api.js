@@ -2,8 +2,12 @@
 
 const API_BASE_URL = "http://localhost:8080/api";
 
-// ⚠️ MODO SIMULADOR: Cambia a 'false' cuando el backend esté listo
-const USE_MOCK = true; 
+// =======================================================
+// CONFIGURACIÓN DE ENTORNO (Atención Backend)
+// Cambiar USE_MOCK a 'false' y colocar la URL de Spring Boot
+// =======================================================
+export const BASE_URL = 'http://localhost:8080/api';
+export const USE_MOCK = true;
 
 export async function fetchAPI(endpoint, options = {}) {
     // Si el simulador está activo, interceptamos la petición
@@ -41,6 +45,100 @@ export async function fetchAPI(endpoint, options = {}) {
         console.error(`Error API (${endpoint}):`, error);
         throw error;
     }
+}
+
+// --- SISTEMA DE NOTIFICACIONES GLOBALES ---
+export function mostrarNotificacion(mensaje, tipo = "exito") {
+    const contenedor = document.querySelector(".toasts");
+    if (!contenedor) return;
+
+    // Seleccionamos el ícono adecuado
+    let icono = "info";
+    if (tipo === "exito") icono = "check_circle";
+    if (tipo === "error") icono = "error";
+
+    // Construimos la alerta
+    const notificacion = document.createElement("div");
+    notificacion.className = `toast-mensaje toast-${tipo}`;
+    notificacion.innerHTML = `
+        <span class="material-symbols-outlined">${icono}</span>
+        <p>${mensaje}</p>
+    `;
+
+    // La agregamos a la pantalla
+    contenedor.appendChild(notificacion);
+
+    // Activamos la animación de entrada
+    setTimeout(() => {
+        notificacion.classList.add("show");
+    }, 10);
+
+    // La destruimos sola después de 3.5 segundos
+    setTimeout(() => {
+        notificacion.classList.remove("show");
+        // Esperamos a que termine la animación de salida para borrarla del HTML
+        setTimeout(() => notificacion.remove(), 400); 
+    }, 3500);
+}
+
+// --- SECUESTRO DEL ALERT NATIVO ---
+window.originalAlert = window.alert; // Guardamos el feo por si acaso
+
+window.alert = function(mensaje) {
+    let tipo = "info"; // Por defecto lo pintamos azul
+    
+    // Un poco de magia: leemos el mensaje para adivinar el color
+    const msg = String(mensaje).toLowerCase();
+    
+    if (msg.includes("éxito") || msg.includes("exito") || msg.includes("actualizada") || msg.includes("aceptada")) {
+        tipo = "exito"; // Lo pintamos verde
+    } else if (msg.includes("error") || msg.includes("denegado") || msg.includes("rechazada") || msg.includes("pasó")) {
+        tipo = "error"; // Lo pintamos rojo
+    }
+
+    // Disparamos nuestra alerta bonita en lugar de la del navegador
+    mostrarNotificacion(mensaje, tipo);
+};
+// --- SISTEMA DE CONFIRMACIÓN CUSTOM ---
+export function confirmarAccion(mensaje) {
+    return new Promise((resolve) => {
+        // 1. Creamos el fondo y la tarjeta
+        const overlay = document.createElement('div');
+        overlay.className = 'confirm-overlay';
+        overlay.innerHTML = `
+            <div class="confirm-card">
+                <span class="material-symbols-outlined" style="font-size: 48px; color: #ef4444; margin-bottom: 15px;">help</span>
+                <h3 style="margin: 0 0 10px 0; color: #1f2937; font-size: 18px;">Confirmación</h3>
+                <p style="margin: 0; color: #4b5563; font-size: 14px; line-height: 1.5;">${mensaje}</p>
+                <div class="confirm-btns">
+                    <button class="btn-cancelar-conf" id="btn-cancel-conf">Cancelar</button>
+                    <button class="btn-aceptar-conf" id="btn-ok-conf">Aceptar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // 2. Lo mostramos con animación
+        setTimeout(() => overlay.classList.add('show'), 10);
+
+        // 3. Función para cerrar y responder
+        const cerrar = (resultado) => {
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                overlay.remove();
+                resolve(resultado); // Aquí le decimos al código principal si fue True o False
+            }, 300);
+        };
+
+        // 4. Escuchamos los clics
+        document.getElementById('btn-cancel-conf').onclick = () => cerrar(false);
+        document.getElementById('btn-ok-conf').onclick = () => cerrar(true);
+
+        // Cerrar dando clic en el fondo oscuro
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) cerrar(false);
+        });
+    });
 }
 
 // --- DATOS FALSOS PARA PODER TRABAJAR EL FRONTEND ---

@@ -1,5 +1,5 @@
 // usuarios.js - Lógica de sesión consumiendo Spring Boot
-import { fetchAPI } from "./api.js";
+import { confirmarAccion, fetchAPI } from "./api.js";
 import { actualizarMenu, cargarFooter, cargarHeader } from "./layout.js"; // Los adaptaremos en la Fase 2
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -139,7 +139,11 @@ function prepararInputFoto() {
 
 // Fase de captura (true) intercepta el clic en seco
 document.addEventListener("click", async (e) => {
-    const targetElement = e.target.closest("a, li, button, div.dropdown-item") || e.target;
+    // CORRECCIÓN: Quitamos el "|| e.target". 
+    // Ahora solo reacciona si el clic fue estrictamente en un enlace, botón o elemento de lista.
+    const targetElement = e.target.closest("a, li, button, .dropdown-item");
+    
+    // Si hizo clic en un fondo, barra o espacio vacío, ignoramos la acción por completo
     if (!targetElement || !targetElement.textContent) return;
 
     const textoClickeado = targetElement.textContent.trim();
@@ -150,14 +154,14 @@ document.addEventListener("click", async (e) => {
         
         targetActualMenu = targetElement;
         
-        // Disparo sincrónico: cero pausas, el navegador lo autoriza de inmediato
+        // Disparo sincrónico
         inputFotoGlobal.click(); 
     }
     else if (textoClickeado.includes("Borrar Foto")) {
         e.preventDefault();
         e.stopPropagation(); 
         
-        if(confirm("¿Estás seguro de que quieres eliminar tu foto de perfil?")) {
+        if (await confirmarAccion("¿Estás seguro de que quieres eliminar tu foto de perfil?")) {
             const contenidoOriginal = targetElement.innerHTML;
             targetElement.innerHTML = "Borrando...";
 
