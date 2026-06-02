@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reglamento - FIC</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="laboratorioStyles.css">
+  <style>
+    .seccion-titulo {
+      color: #004A99; /* Azul_Fic */
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    .divider-cafe {
+      width: 40px;
+      height: 3px;
+      background-color: #8D6E63; 
+      margin-bottom: 12px;
+    }
+    .texto-cuerpo {
+      color: #333333;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .horario-item {
+      margin-bottom: 12px;
+    }
+    .reglamento-lista {
+      color: #444444;
+      font-size: 14px;
+      line-height: 1.6;
+      list-style-type: none;
+      padding: 0;
+      margin-bottom: 0;
+    }
+    .reglamento-lista li {
+      margin-bottom: 8px;
+    }
+    .divider-gris {
+      width: 100%;
+      height: 1px;
+      background-color: #EEEEEE;
+      margin: 16px 0;
+    }
+    .nota-importante {
+      color: #D32F2F;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .nota-detalle {
+      color: #666666;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+    <header class="header"></header>
+
+    <div class="content help-section">
+        <div class="help-header">
+            <h2>Facultad de Informática Culiacán</h2>
+        </div>
+        
+        <div class="help-grid">
+            <div class="card help-card">
+                <div class="card-header">
+                    <span class="material-symbols-outlined icon-blue">info</span>
+                    <h3>Información General</h3>
+                </div>
+                <div class="card-body">
+                    <details open>
+                        <summary class="summary-toggle">Ver detalles de la sala</summary>
+                        
+                        <div style="padding-top: 15px;">
+                            <div class="seccion-titulo">HORARIOS</div>
+                            <div class="divider-cafe"></div>
+                            
+                            <div class="texto-cuerpo">
+                                <div class="horario-item">
+                                    <strong>Laboratorio A y B</strong><br>
+                                    Lunes a Viernes: 7:00 a 20:00 horas.
+                                </div>
+                                <div class="horario-item">
+                                    <strong>Laboratorio C</strong><br>
+                                    Lunes a Viernes: 8:00 a 20:00 horas.
+                                </div>
+                                <div class="horario-item">
+                                    <strong>Auditorio</strong><br>
+                                    Lunes a Viernes: 7:00 a 20:00 horas.
+                                </div>
+                            </div>
+
+                            <div class="divider-gris" style="margin-bottom: 20px;"></div>
+
+                            <div class="seccion-titulo">REGLAMENTO</div>
+                            <div class="divider-cafe"></div>
+                            
+                            <ul class="reglamento-lista">
+                                <li>1. Presentar credencial actualizada de la Facultad o Identificación oficial.</li>
+                                <li>2. Mantener buena conducta al interior.</li>
+                                <li>3. Hacer uso adecuado del equipo y mobiliario.</li>
+                                <li>4. Cuidar el mobiliario, sujetándose a los mecanismos de control e higiene.</li>
+                                <li>5. Utilizar las instalaciones exclusivamente con propósitos académicos.</li>
+                                <li>6. No introducir ni consumir bebidas o alimentos.</li>
+                                <li>7. Hablar en voz baja.</li>
+                                <li>8. Reportar al encargado mal funcionamiento.</li>
+                                <li>9. No sustraer material o equipo.</li>
+                            </ul>
+
+                            <div class="divider-gris"></div>
+
+                            <div class="nota-importante">Nota importante:</div>
+                            <div class="nota-detalle">
+                                El incumplimiento puede causar: desalojo, suspensión temporal/definitiva o reporte al Consejo Técnico.
+                            </div>
+                        </div>
+                    </details>
+                </div>  
+            </div>
+        </div> 
+    </div> 
+
+    <footer></footer>
+
+    <script type="module" src="./usuarios.js"></script>
+</body>
+</html>

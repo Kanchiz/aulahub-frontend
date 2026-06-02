@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajustes - AulaHub</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="laboratorioStyles.css">
+    <style>
+        .config-container { max-width: 800px; margin: 0 auto; }
+        .config-card { flex-direction: row; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .config-icon { color: #164B8A; font-size: 28px; padding: 10px; background-color: #f0f9ff; border-radius: 50%; margin-right: 15px; }
+
+        .btn-action {
+            padding: 8px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: white;
+            color: #164B8A !important;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action:hover { background: #f0f9ff; border-color: #164B8A; }
+    </style>
+</head>
+<body>
+    <header class="header"></header>
+    <div class="toasts"></div>
+
+    <div class="content">
+        <h2>Configuraciones</h2>
+        
+        <div class="config-container">
+            <h4 style="margin-bottom: 15px; color: #666; font-size: 12px; text-transform: uppercase;">Cuenta</h4>
+
+            <div class="card config-card">
+                <div style="display:flex; align-items:center;">
+                    <span class="material-symbols-outlined config-icon">mail</span>
+                    <div>
+                        <h3 style="margin:0; font-size:16px;">Correo Electrónico</h3>
+                        <p id="user-email" style="margin:0; font-size:13px; color:#666;">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card config-card">
+                <div style="display:flex; align-items:center;">
+                    <span class="material-symbols-outlined config-icon">lock_reset</span>
+                    <div>
+                        <h3 style="margin:0; font-size:16px;">Contraseña</h3>
+                        <p style="margin:0; font-size:13px; color:#666;">Enviar correo de recuperación</p>
+                    </div>
+                </div>
+                <button id="btnResetPassword" class="btn-action">Restablecer</button>
+            </div>
+        </div>
+    </div>
+
+    <footer></footer>
+    <script type="module" src="./usuarios.js"></script>
+</body>
+</html>

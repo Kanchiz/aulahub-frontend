@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionar Solicitudes - AulaHub</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="laboratorioStyles.css">
+  <style>
+      .filter-bar { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+      .filter-bar label { font-weight: 600; color: #555; }
+      .select-status { padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; outline: none; cursor: pointer; min-width: 150px; }
+  </style>
+</head>
+<body>
+    <header class="header"></header>
+    <div class="toasts"></div>
+
+    <div class="content">
+        <h2>Gestionar Solicitudes</h2>
+        
+        <div class="filter-bar">
+            <label for="statusFilter">Mostrar:</label>
+            <select id="statusFilter" class="select-status">
+                <option value="Pendiente">Pendientes</option>
+                <option value="Aceptada">Aceptadas</option>
+                <option value="Rechazada">Rechazadas</option>
+            </select>
+        </div>
+
+        <div id="loading" style="text-align: center; color: #666; margin-top: 20px;">
+            Cargando solicitudes...
+        </div>
+        
+        <div id="empty-message" style="display: none; text-align: center; color: #9ca3af; margin-top: 20px;">
+            <span class="material-symbols-outlined" style="font-size: 48px; display:block; margin: 0 auto 10px;">folder_open</span>
+            No hay solicitudes en este estado.
+        </div>
+
+        <div id="solicitudes-container" class="grid-container">
+            </div>
+    </div>
+
+    <footer></footer>
+    <script type="module" src="./usuarios.js"></script>
+    <script type="module" src="./solicitudes.js"></script>
+</body>
+</html>

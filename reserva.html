@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Reservas</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="datestyles.css">
+</head>
+<body>
+    <header class="header"></header>
+    <div class="toasts"></div>
+    <div class="ImgFoto">
+        <img id="aulaImg" src="img/aulas/default.jpg" alt="aula">
+    </div>
+
+    <div class="form-container">
+        <div class="form-row">
+            <div class="input-group">
+                <label>Aula Seleccionada</label>
+                <input type="text" id="aulaDisplay" readonly class="input-moderno input-locked">
+            </div>
+            <div class="input-group">
+                <label for="turno">Turno</label>
+                <select name="turno" id="turno" class="input-moderno">
+                    <option value="Matutino">Matutino</option>
+                    <option value="Vespertino">Vespertino</option>
+                </select>
+            </div>
+        </div>
+
+<div class="form-row">
+            <div class="input-group">
+                <label for="materia">Materia</label>
+                <select id="materia" class="input-moderno">
+                    <option value="">Cargando materias...</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="grupo">Grupo</label>
+                <select id="grupo" class="input-moderno">
+                    <option value="">Selecciona una materia primero</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <h3 id="selectedDates">Fechas seleccionadas:</h3>
+    <div class="calendar">
+        <!-- VISTA SEMANAL -->
+<div id="weekContainer" class="week-container" style="display: none;">
+    <div class="week-header">
+        <button id="prevWeekButton" class="week-nav-btn">&lt;</button>
+
+        <span id="weekRangeText" class="week-title">Semana</span>
+
+        <button id="nextWeekButton" class="week-nav-btn">&gt;</button>
+    </div>
+
+    <div id="weekScroll" class="week-scroll">
+        <table id="weekTable" class="week-table">
+            <!-- Se llena con JS -->
+        </table>
+    </div>
+</div>
+
+
+    </div>
+
+    <div class="aceptar"><button type="button" id="btnPreReservar">Continuar</button></div>
+
+    <div id="modalConfirmacion" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Confirmar Reserva</h3>
+            <div class="modal-details">
+                <p><strong>Aula:</strong> <span id="confAula"></span></p>
+                <p><strong>Materia:</strong> <span id="confMateria"></span></p>
+                <p><strong>Grupo:</strong> <span id="confGrupo"></span></p>
+                <p><strong>Turno:</strong> <span id="confTurno"></span></p>
+                <p><strong>Fechas:</strong> <span id="confFechas"></span></p>
+                <p><strong>Horas:</strong> <span id="confHoras"></span></p>
+            </div>
+            <div class="modal-actions">
+                <button id="btnCancelar" class="btn-cancel">Cancelar</button>
+                <button id="btnEnviarReserva" class="btn-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script type="module" src="./funcionDates.js"></script>
+    <script type="module" src="./usuarios.js"></script>
+</body>
+</html>

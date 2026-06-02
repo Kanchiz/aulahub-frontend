@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Aula - FIC</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="laboratorioStyles.css">
+</head>
+<body>
+    <header class="header"></header>
+    <div class="toasts"></div>
+    <div class="content">
+        <h2>Selecciona el aula a reservar</h2>
+        <div class="aula-list">
+            <div class="aula-card-classic card" data-aula="labA" style="visibility: hidden;" onclick="location.href='reserva.html?aula=labA'">
+                <div class="aula-emoji">💻</div>
+                <div class="aula-text"><strong>Laboratorio de Cómputo A</strong><span>Mediano, 45 equipos</span></div>
+            </div>
+            <div class="aula-card-classic card" data-aula="labB" style="visibility: hidden;" onclick="location.href='reserva.html?aula=labB'">
+                <div class="aula-emoji">💻</div>
+                <div class="aula-text"><strong>Laboratorio de Cómputo B</strong><span>Pequeño, 30 equipos</span></div>
+            </div>
+            <div class="aula-card-classic card" data-aula="centro" style="visibility: hidden;" onclick="location.href='reserva.html?aula=centro'">
+                <div class="aula-emoji">💻</div>
+                <div class="aula-text"><strong>Centro de Cómputo</strong><span>Pequeño, 30 equipos</span></div>
+            </div>
+            <div class="aula-card-classic card" data-aula="auditorio" style="visibility: hidden;" onclick="location.href='reserva.html?aula=auditorio'">
+                <div class="aula-emoji">🎤</div>
+                <div class="aula-text"><strong>Auditorio</strong><span>Grande, 100 personas</span></div>
+            </div>
+            <!--se agregaron las cards de cd y pos-->
+            <div class="aula-card-classic card" data-aula="labCD" style="visibility: hidden;" onclick="location.href='reserva.html?aula=labCD'">
+                <div class="aula-emoji">💻</div>
+                <div class="aula-text"><strong>Laboratorio de Ciencia de Datos</strong><span>Pequeño, 15 equipos</span></div>
+            </div>
+            <div class="aula-card-classic card" data-aula="labP" style="visibility: hidden;" onclick="location.href='reserva.html?aula=labP'">
+                <div class="aula-emoji">💻</div>
+                <div class="aula-text"><strong>Laboratorio de Posgrado</strong><span>Pequeño, 10 equipos</span></div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script type="module" src="./usuarios.js"></script>
+</body>
+</html>

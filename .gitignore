@@ -1,0 +1,13 @@
+# Editores y entornos de desarrollo
+.vscode/
+.idea/
+
+# Archivos ocultos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Dependencias (por si llegas a usar npm más adelante)
+node_modules/
+
+# Variables de entorno o secrets del front
+.env
