@@ -111,6 +111,19 @@ async function simulateResponse(endpoint, options) {
     if (endpoint.includes('/estado') && options.method === 'PUT') {
         return { success: true, message: "Estado actualizado y notificaciones enviadas por el backend" };
     }
+    // 9. Simular recuperación de contraseña
+    if (endpoint === '/reset-password' && options.method === 'POST') {
+        return { success: true, message: "Instrucciones enviadas al correo" };
+    }
+    // 10. Simular subida y borrado de foto de perfil
+    if (endpoint === '/usuarios/foto') {
+        if (options.method === 'POST') {
+            return { success: true, message: "Imagen recibida y guardada" };
+        }
+        if (options.method === 'DELETE') {
+            return { success: true, message: "Imagen eliminada del servidor" };
+        }
+    }
 
     console.log(`[SIMULADOR] No hay datos falsos configurados para: ${endpoint}`);
     return [];
