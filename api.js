@@ -95,28 +95,21 @@ async function simulateResponse(endpoint, options) {
         ];
     }
 
-    // 7. Simular Reservas para el calendario
-    if (endpoint.startsWith('/reservas')) {
-        // Si el front hace un POST para crear una reserva
-        if (options.method === 'POST') {
-            return { id: 99, estado: "PENDIENTE" };
-        }
+// 7. Simular Reservas 
+    if (endpoint.startsWith('/reservas') && !endpoint.includes('/estado')) {
+        if (options.method === 'POST') return { id: 99, estado: "PENDIENTE" };
         
-        // Si el front hace un GET para llenar la tabla
-        // Generamos una reserva falsa para hoy a las 10:00 AM
         const hoy = new Date().toISOString().split('T')[0];
         return [
-            { 
-                id: 1, 
-                usuarioId: 2, 
-                aulaId: 1, 
-                fecha: hoy, 
-                horaInicio: "10:00",
-                horaFin: "11:00",
-                estado: "ACEPTADA", 
-                profesorName: "Profe FIC" 
-            }
+            { id: 1, usuarioId: 2, aulaId: 1, fecha: hoy, horaInicio: "10:00", horaFin: "11:00", estado: "PENDIENTE", profesorName: "Profe FIC", materia: "Programación Web", grupo: "101" },
+            { id: 2, usuarioId: 2, aulaId: 2, fecha: hoy, horaInicio: "11:00", horaFin: "12:00", estado: "ACEPTADA", profesorName: "Profe FIC", materia: "Bases de Datos", grupo: "102" },
+            { id: 3, usuarioId: 2, aulaId: 3, fecha: hoy, horaInicio: "12:00", horaFin: "13:00", estado: "RECHAZADA", profesorName: "Profe FIC", materia: "Ingeniería de Software", grupo: "103" }
         ];
+    }
+
+    // 8. Simular la respuesta del administrador (PUT)
+    if (endpoint.includes('/estado') && options.method === 'PUT') {
+        return { success: true, message: "Estado actualizado y notificaciones enviadas por el backend" };
     }
 
     console.log(`[SIMULADOR] No hay datos falsos configurados para: ${endpoint}`);

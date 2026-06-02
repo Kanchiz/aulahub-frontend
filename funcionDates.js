@@ -1,13 +1,12 @@
-// funcionDates.js - Lógica original restaurada y conectada a Spring Boot
+// funcionDates.js - Conectado a Spring Boot y Modal (Selector Corregido)
 import { fetchAPI } from "./api.js";
 
-// Constantes y variables globales
 const HORAS_MATUTINO = ["07:00 - 08:00", "08:00 - 09:00", "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00"];
 const HORAS_VESPERTINO = ["14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00", "17:00 - 18:00", "18:00 - 19:00"];
 let aulaNombreReal = "";
 let aulaCodigo = "";
+let isUserAdmin = false; 
 
-// Elementos del DOM
 const calendarBody = document.getElementById('calendarBody');
 const currentMonthElement = document.getElementById('currentMonth');
 const selectedDatesElement = document.getElementById('selectedDates');
@@ -32,7 +31,6 @@ let currentWeekStart = getStartOfWeek(new Date());
 const selectedSlots = new Set();
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Configurar Aula e Imágenes
     const urlParams = new URLSearchParams(window.location.search);
     aulaCodigo = urlParams.get('aula') || 'labA';
     aulaNombreReal = getNombreAula(aulaCodigo);
@@ -45,14 +43,126 @@ document.addEventListener('DOMContentLoaded', async () => {
         aulaImg.onerror = () => { aulaImg.src = "img/aulas/default.jpg"; };
     }
 
-    // 2. Cargar datos del backend y pintar interfaz
+    crearModalAdmin(); 
+    
+    await verificarRol(); 
     await cargarMaterias();
+    
     renderCalendar();
     if (weekContainer) weekContainer.style.display = 'block';
     renderSemana();
 });
 
-// --- CONEXIÓN CON EL BACKEND (Reemplazando Firebase) ---
+// --- LÓGICA DE ROLES Y MODAL ADMIN ---
+
+async function verificarRol() {
+    const emailLocal = localStorage.getItem("aulaHub_user");
+    if (!emailLocal) return;
+
+    try {
+        const usuarios = await fetchAPI("/usuarios");
+        const userObj = usuarios.find(u => u.email === emailLocal);
+        
+        if (userObj) {
+            const roles = await fetchAPI('/roles');
+            const misRoles = roles.filter(r => r.usuarioId === userObj.id);
+            isUserAdmin = misRoles.some(r => r.tipo === 'ADMIN' || r.tipo === 'SUPER_ADMIN');
+
+            if (isUserAdmin) {
+                const btnReservarContainer = document.querySelector('.aceptar');
+                if(btnReservarContainer) btnReservarContainer.style.display = 'none';
+
+                if(aulaDisplay) aulaDisplay.closest('.input-group').style.display = 'none';
+                if(selectMateria) selectMateria.closest('.input-group').style.display = 'none';
+                if(selectGrupo) selectGrupo.closest('.input-group').style.display = 'none';
+
+                const formContainer = document.querySelector('.form-container');
+                if(formContainer) {
+                    formContainer.style.boxShadow = "none";
+                    formContainer.style.padding = "10px";
+                    formContainer.style.minHeight = "auto";
+                    formContainer.style.background = "transparent";
+                }
+            }
+        }
+    } catch (e) { console.error("Error verificando rol:", e); }
+}
+
+function crearModalAdmin() {
+    const div = document.createElement('div');
+    div.id = 'adminActionModal';
+    div.className = 'admin-modal-overlay';
+    div.innerHTML = `
+        <div class="admin-card">
+            <span class="material-symbols-outlined" style="font-size: 40px; color: #f97316; margin-bottom: 10px;">verified_user</span>
+            <h3>Gestionar Solicitud</h3>
+            <div class="admin-info">
+                <p><strong>Profesor:</strong> <span id="admProf"></span></p>
+                <p><strong>Materia:</strong> <span id="admMateria"></span></p>
+                <p><strong>Grupo:</strong> <span id="admGrupo"></span></p>
+            </div>
+            <div class="admin-actions">
+                <button class="btn-admin btn-reject" id="btnAdminReject">Rechazar</button>
+                <button class="btn-admin btn-close" id="btnAdminClose">Cerrar</button>
+                <button class="btn-admin btn-approve" id="btnAdminApprove">Aceptar</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(div);
+
+    document.getElementById('btnAdminClose').onclick = cerrarModalAdmin;
+    
+    document.getElementById('btnAdminApprove').onclick = () => {
+        const modal = document.getElementById('adminActionModal');
+        resolverSolicitud(modal.dataset.currentId, "ACEPTADA");
+    };
+
+    document.getElementById('btnAdminReject').onclick = () => {
+        const modal = document.getElementById('adminActionModal');
+        resolverSolicitud(modal.dataset.currentId, "RECHAZADA");
+    };
+}
+
+function abrirModalAdmin(id, prof, mat, grupo) {
+    const modal = document.getElementById('adminActionModal');
+    document.getElementById('admProf').textContent = prof || 'N/A';
+    document.getElementById('admMateria').textContent = mat || 'N/A';
+    document.getElementById('admGrupo').textContent = grupo || 'N/A';
+    
+    modal.dataset.currentId = id; 
+    modal.classList.add('active');
+}
+
+function cerrarModalAdmin() {
+    document.getElementById('adminActionModal').classList.remove('active');
+}
+
+async function resolverSolicitud(id, status) {
+    const btn = status === "ACEPTADA" ? document.getElementById('btnAdminApprove') : document.getElementById('btnAdminReject');
+    const originalText = btn.innerText;
+    btn.innerText = "...";
+    btn.disabled = true;
+
+    try {
+        await fetchAPI(`/reservas/${id}/estado`, {
+            method: 'PUT',
+            body: JSON.stringify({ estado: status })
+        });
+
+        alert(`Solicitud ${status.toLowerCase()}.`);
+        cerrarModalAdmin();
+        renderSemana(); 
+    } catch (e) {
+        console.error(e);
+        alert("Error al actualizar en el servidor.");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}
+
+
+// --- CONEXIÓN DE DATOS ---
 
 async function cargarMaterias() {
     if(!selectMateria) return;
@@ -65,7 +175,6 @@ async function cargarMaterias() {
             option.textContent = m.nombre; 
             selectMateria.appendChild(option);
         });
-
         selectMateria.addEventListener('change', (e) => cargarGrupos(e.target.value));
     } catch (error) {
         console.error(error);
@@ -77,8 +186,6 @@ function cargarGrupos(materia) {
     if(!selectGrupo) return;
     selectGrupo.innerHTML = '<option value="">Selecciona un grupo</option>';
     if (!materia) return;
-    
-    // Simulamos los grupos por ahora. En el futuro, Spring Boot te dará esto.
     const gruposDemo = ["Grupo 101", "Grupo 102", "Grupo 201"];
     gruposDemo.forEach(grupo => {
         const option = document.createElement('option'); 
@@ -88,14 +195,17 @@ function cargarGrupos(materia) {
     });
 }
 
+function getAulaIdFromCodigo(codigo) {
+    const map = { "laba": 1, "labb": 2, "centro": 3, "auditorio": 4, "labcd": 5, "labp": 6 };
+    return map[String(codigo).toLowerCase()] || 1;
+}
+
 async function cargarHorariosOcupados(fechaInicio, fechaFin) {
     if (!aulaNombreReal) return;
-    const strInicio = fechaToISO(fechaInicio);
-    const strFin = fechaToISO(fechaFin);
-
+    
     try {
-        // Pedimos al backend (simulador) las reservas
         const reservas = await fetchAPI('/reservas');
+        const currentAulaId = getAulaIdFromCodigo(aulaCodigo);
         
         document.querySelectorAll('.time-slot-cell').forEach(cell => {
             cell.classList.remove('busy', 'pending-slot');
@@ -104,24 +214,26 @@ async function cargarHorariosOcupados(fechaInicio, fechaFin) {
         });
 
         reservas.forEach(data => {
-            // Adaptamos la data falsa del mock a la lógica original de tus fechas
+            // Filtro para que no se mezclen las reservas de distintas aulas
+            if(data.aulaId !== currentAulaId) return;
+
             const fecha = data.fecha;
             let horaSolo = data.horaInicio + " - " + data.horaFin; 
 
-            // Buscamos la celda en tu tabla
-            const cell = document.querySelector(`.time-slot-cell[data-fecha="${fecha}"]`);
-            // Nota: Para ser exactos habría que buscar también [data-hora="${horaSolo}"]
-            // pero lo simplificamos para que empate con las celdas generadas.
+            // LA SOLUCIÓN: Buscamos por fecha Y HORA exacta al mismo tiempo
+            const cell = document.querySelector(`.time-slot-cell[data-fecha="${fecha}"][data-hora="${horaSolo}"]`);
             
-            if (cell && cell.dataset.hora === horaSolo) {
+            if (cell) {
                 cell.dataset.reservaId = data.id;
                 cell.dataset.profesor = data.profesorName || "Profesor";
+                cell.dataset.materia = data.materia || "Sin materia";
+                cell.dataset.grupo = data.grupo || "";
 
                 if (data.estado === "ACEPTADA") {
                     cell.classList.add('busy');
                     cell.title = `Ocupado por: ${data.profesorName}`;
                 } else if (data.estado === "PENDIENTE") {
-                    cell.classList.add('pending-slot');
+                    cell.classList.add('pending-slot'); 
                     cell.title = `Solicitud Pendiente`;
                 }
                 const key = `${fecha}|${horaSolo}`;
@@ -132,12 +244,22 @@ async function cargarHorariosOcupados(fechaInicio, fechaFin) {
     } catch (error) { console.error("Error cargando horarios:", error); }
 }
 
-// --- LÓGICA VISUAL ORIGINAL (Intacta) ---
+// --- LÓGICA VISUAL Y CLICS ---
 
 function handleCellClick(td, key) {
     if (td.classList.contains('past')) { alert("Esta fecha ya pasó."); return; }
     if (td.classList.contains('busy')) { alert(`Horario ocupado por: ${td.dataset.profesor}`); return; }
-    if (td.classList.contains('pending-slot')) { alert("Este horario tiene una solicitud pendiente."); return; }
+    
+    if (td.classList.contains('pending-slot')) { 
+        if (isUserAdmin) {
+            abrirModalAdmin(td.dataset.reservaId, td.dataset.profesor, td.dataset.materia, td.dataset.grupo);
+        } else {
+            alert("Este horario tiene una solicitud pendiente."); 
+        }
+        return; 
+    }
+
+    if (isUserAdmin) return; 
 
     if (selectedSlots.has(key)) { 
         selectedSlots.delete(key); td.classList.remove('selected'); 
@@ -269,14 +391,12 @@ window.selectDate = function(day) {
     renderCalendar(); renderSemana();
 };
 
-// Eventos de botones
 if (prevBtn) prevBtn.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
 if (nextBtn) nextBtn.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 if (prevWeekButton) prevWeekButton.addEventListener('click', () => { currentWeekStart.setDate(currentWeekStart.getDate() - 7); renderSemana(); });
 if (nextWeekButton) nextWeekButton.addEventListener('click', () => { currentWeekStart.setDate(currentWeekStart.getDate() + 7); renderSemana(); });
 if (selectTurno) selectTurno.addEventListener('change', () => { selectedSlots.clear(); updateSelectedDatesFromSlots(); renderSemana(); });
 
-// Modal y Envío
 const btnPreReservar = document.getElementById('btnPreReservar');
 const modal = document.getElementById('modalConfirmacion');
 const btnCancelar = document.getElementById('btnCancelar');
@@ -323,7 +443,7 @@ if (btnEnviar) {
                 return fetchAPI('/reservas', {
                     method: 'POST',
                     body: JSON.stringify({
-                        aulaId: aulaCodigo,
+                        aulaId: getAulaIdFromCodigo(aulaCodigo),
                         materia: materia,
                         grupo: grupo,
                         turno: turno,
@@ -347,7 +467,6 @@ if (btnEnviar) {
     });
 }
 
-// Helpers de Aulas
 function getNombreAula(codigo) {
     switch (codigo) {
         case "labA": return "Laboratorio de Cómputo A";
