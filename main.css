@@ -352,3 +352,62 @@ footer {
     color: #9ca3af;
     font-size: 14px;
 }
+
+/* =========================================
+    ESTILOS REACOMODADOS DE LAS VISTAS
+   ========================================= */
+
+/* --- De index.html (Login / Bienvenida) --- */
+.page-wrapper { display: flex; align-items: stretch; width: 100%; max-width: 860px; border-radius: 25px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15); overflow: hidden; }
+.welcome-panel { flex: 1; background-color: #164B8A; color: #fff; padding: 48px 40px; display: flex; flex-direction: column; justify-content: center; }
+.welcome-panel .welcome-title { font-size: 26px; font-weight: 700; margin: 0 0 8px; letter-spacing: 0.5px; }
+.welcome-panel .welcome-subtitle { font-size: 13px; font-weight: 400; opacity: 0.85; margin: 0 0 32px; line-height: 1.5; }
+.welcome-panel .section-title { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #a8c4f0; margin: 0 0 6px; }
+.welcome-panel .section-body { font-size: 13px; font-weight: 400; line-height: 1.7; opacity: 0.9; margin: 0 0 24px; }
+.welcome-panel .divider { width: 40px; height: 2px; background-color: #a8c4f0; margin: 0 0 20px; border: none; }
+.login-container { background-color: #fff; padding: 50px 40px; width: 360px; flex-shrink: 0; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.logo { width: 260px; height: auto; margin: 0 auto 20px; display: block; object-fit: contain; }
+.login-container h2 { font-size: 17px; color: #444; margin-top: 5px; margin-bottom: 30px; font-weight: 500; }
+.login-container label { display: block; text-align: left; font-weight: 600; font-size: 15px; margin-bottom: 6px; color: #222; }
+.login-container input { width: 100%; padding: 12px 15px; border: none; outline: none; border-radius: 25px; background-color: #c9cfff; font-size: 15px; color: #222; margin-bottom: 25px; }
+.login-container input::placeholder { color: #666; }
+.login-container button { width: 100%; background-color: black; color: white; border: none; border-radius: 25px; padding: 12px 0; font-weight: 600; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+.login-container button:hover { background-color: #333; }
+@media (max-width: 700px) {
+  .page-wrapper { flex-direction: column; max-width: 420px; }
+  .welcome-panel { padding: 32px 28px; }
+  .welcome-panel .welcome-title { font-size: 22px; }
+  .login-container { width: 100%; padding: 36px 28px; }
+  .logo { width: 200px; }
+}
+
+/* --- De configuraciones.html --- */
+.config-container { max-width: 800px; margin: 0 auto; }
+.config-card { flex-direction: row; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+.config-icon { color: #164B8A; font-size: 28px; padding: 10px; background-color: #f0f9ff; border-radius: 50%; margin-right: 15px; }
+.btn-action { padding: 8px 16px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; color: #164B8A !important; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-action:hover { background: #f0f9ff; border-color: #164B8A; }
+
+/* --- De reglamento.html --- */
+.seccion-titulo { color: #004A99; font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
+.divider-cafe { width: 40px; height: 3px; background-color: #8D6E63; margin-bottom: 12px; }
+.texto-cuerpo { color: #333333; font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+.horario-item { margin-bottom: 12px; }
+.reglamento-lista { color: #444444; font-size: 14px; line-height: 1.6; list-style-type: none; padding: 0; margin-bottom: 0; }
+.reglamento-lista li { margin-bottom: 8px; }
+.divider-gris { width: 100%; height: 1px; background-color: #EEEEEE; margin: 16px 0; }
+.nota-importante { color: #D32F2F; font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+.nota-detalle { color: #666666; font-size: 13px; line-height: 1.4; }
+
+/* --- De solicitudes.html --- */
+.filter-bar { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.filter-bar label { font-weight: 600; color: #555; }
+.select-status { padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; outline: none; cursor: pointer; min-width: 150px; }
+
+/* --- Fix para centrar exclusivamente el Login --- */
+body.login-body {
+    justify-content: center;
+    align-items: center;
+    background-color: #d7d0d0;
+    padding: 20px;
+}
